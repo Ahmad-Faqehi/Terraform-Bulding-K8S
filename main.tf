@@ -1,11 +1,43 @@
 provider "aws" {
   region     = "us-east-1"
-  access_key = "<Put_Your_Key>"
-  secret_key = "<Put_Your_Key>"
+  access_key = var.access_key
+  secret_key = var.secret_key
 }
 
 
-# Todo: create s3 buckit
+resource "aws_s3_bucket" "s3buckit" {
+  bucket = var.s3buckit
+  acl    = "private"
+  force_destroy = true
+
+}
+
+data "template_file" "envMsr" {
+  template = file("scripts/install_k8s_msr.sh")
+  vars = {
+    access_key = var.access_key,
+    private_key = var.secret_key,
+    s3buckit_name = var.s3buckit
+  }
+
+  depends_on = [
+    aws_s3_bucket.s3buckit
+  ]
+}
+
+data "template_file" "envWrk" {
+  template = file("scripts/install_k8s_wrk.sh")
+  vars = {
+    access_key = var.access_key,
+    private_key = var.secret_key,
+    s3buckit_name = var.s3buckit
+  }
+
+  depends_on = [
+    aws_s3_bucket.s3buckit
+  ]
+}
+
 
 resource "aws_instance" "ec2_instance_msr" {
     ami = "${var.ami_id}"
@@ -23,7 +55,8 @@ resource "aws_instance" "ec2_instance_msr" {
     tags = {
         Name = "K8S_msr"
     }
-    user_data = "${file("scripts/install_k8s_msr.sh")}"
+    # user_data = "${file("scripts/install_k8s_msr.sh")}"
+    user_data_base64       = base64encode(data.template_file.envMsr.rendered)
 } 
 
 resource "aws_instance" "ec2_instance_wrk" {
@@ -42,7 +75,8 @@ resource "aws_instance" "ec2_instance_wrk" {
     tags = {
         Name = "K8S_wrk"
     }
-    user_data = "${file("scripts/install_k8s_wrk.sh")}"
+    # user_data = "${file("scripts/install_k8s_wrk.sh")}"
+    user_data_base64       = base64encode(data.template_file.envWrk.rendered)
     depends_on = [
     aws_instance.ec2_instance_msr
   ]

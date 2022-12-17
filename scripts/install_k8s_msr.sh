@@ -5,8 +5,8 @@
 hostname k8s-msr-01
 echo "k8s-msr-01" > /etc/hostname
 
-export AWS_ACCESS_KEY_ID=<Put_Your_Key>
-export AWS_SECRET_ACCESS_KEY=<Put_Your_Key>
+export AWS_ACCESS_KEY_ID=${access_key}
+export AWS_SECRET_ACCESS_KEY=${private_key}
 export AWS_DEFAULT_REGION=us-east-1
 
 
@@ -50,14 +50,14 @@ cat /tmp/restult.out
 
 #to get join commdn
 tail -2 /tmp/restult.out > /tmp/join_command.sh;
-aws s3 cp /tmp/join_command.sh s3://k8sinstalletion;
+aws s3 cp /tmp/join_command.sh s3://${s3buckit_name};
 #this adds .kube/config for root account, run same for ubuntu user, if you need it
 mkdir -p /root/.kube;
 cp -i /etc/kubernetes/admin.conf /root/.kube/config;
 cp -i /etc/kubernetes/admin.conf /tmp/admin.conf;
 chmod 777 /tmp/admin.conf
 #to copy kube config file to s3
-# aws s3 cp /etc/kubernetes/admin.conf s3://k8sinstalletion
+# aws s3 cp /etc/kubernetes/admin.conf s3://${s3buckit_name}
 
 #Uncomment next line if you want calico Cluster Pod Network
 curl -o /root/calico.yaml https://docs.projectcalico.org/v3.16/manifests/calico.yaml

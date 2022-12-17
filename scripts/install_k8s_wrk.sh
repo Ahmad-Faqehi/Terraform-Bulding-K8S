@@ -5,8 +5,8 @@
 hostname k8s-wrk-01
 echo "k8s-wrk-01" > /etc/hostname
 
-export AWS_ACCESS_KEY_ID=<Put_Your_Key>
-export AWS_SECRET_ACCESS_KEY=<Put_Your_Key>
+export AWS_ACCESS_KEY_ID=${access_key}
+export AWS_SECRET_ACCESS_KEY=${private_key}
 export AWS_DEFAULT_REGION=us-east-1
 
 
@@ -47,7 +47,7 @@ systemctl restart containerd
 # to insure the join command start when the installion of master node is done.
 sleep 1m
 
-aws s3 cp s3://k8sinstalletion/join_command.sh /tmp/.
+aws s3 cp s3://${s3buckit_name}/join_command.sh /tmp/.
 chmod +x /tmp/join_command.sh
 bash /tmp/join_command.sh
 

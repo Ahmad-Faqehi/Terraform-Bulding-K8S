@@ -1,10 +1,16 @@
-# variable "access_key" {
-#         description = "Access key to AWS console"
-# }
-# variable "secret_key" {
-#         description = "Secret key to AWS console"
-# }
+variable "access_key" { 
+        description = "Access key to AWS console"
+        default = "<Put_the_key>" #Todo: add your acess key here
+}
+variable "secret_key" {
+        description = "Secret key to AWS console"
+        default = "<Put_the_key>" #Todo: add your secert key here
+}
 
+variable "s3buckit" {
+        description = "The name of s3 object buckit"
+        default = "<Put_name_for_s3_buckit>" #Todo: choose a name for your s3 buckit, and should be uniqe 
+}
 
 variable "instance_name" {
         description = "Name of the instance to be created"
