@@ -4,6 +4,9 @@ provider "aws" {
   secret_key = "<Put_Your_Key>"
 }
 
+
+# Todo: create s3 buckit
+
 resource "aws_instance" "ec2_instance_msr" {
     ami = "${var.ami_id}"
     count = "${var.number_of_instances}"
