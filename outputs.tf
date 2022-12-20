@@ -11,3 +11,7 @@ output "instance_wrk_public_ip" {
   description = "Private IP address of master"
   value       = aws_instance.ec2_instance_wrk[0].public_ip
 }
+output "s3_bucket_name" {
+  description = "The S3 bucket name"
+  value       = "k8s-${random_string.s3name.result}"
+}

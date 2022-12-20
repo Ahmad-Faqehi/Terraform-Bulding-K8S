@@ -1,35 +1,33 @@
-variable "access_key" { 
+variable "access_key" { #Todo: uncomment the default value and add your acess key.
         description = "Access key to AWS console"
-        default = "<Put_the_key>" #Todo: add your acess key here
+        #default = "XXXXXXXXXXXXXX" 
 }
-variable "secret_key" {
+
+variable "secret_key" {  #Todo: uncomment the default value and add your secert key.
         description = "Secret key to AWS console"
-        default = "<Put_the_key>" #Todo: add your secert key here
+        # default = "XXXXXXXXXXXXXXXXXXXXXXXXX" 
 }
 
-variable "s3buckit" {
-        description = "The name of s3 object buckit"
-        default = "<Put_name_for_s3_buckit>" #Todo: choose a name for your s3 buckit, and should be uniqe 
+variable "ami_key_pair_name" { #Todo: uncomment the default value and add your pem key pair name. Hint: don't write '.pem' exction just the key name
+        #default = "mykey" 
 }
-
-variable "instance_name" {
-        description = "Name of the instance to be created"
-        default = "k8s"
-}
-
-variable "instance_type" {
-        default = "t2.medium"
+variable "region" {
+        description = "The region zone on AWS"
+        default = "us-east-1" #The zone I selected is us-east-1, feel free to cahnge it.
 }
 
 variable "subnet_id" {
         description = "The VPC subnet the instance(s) will be created in"
-        # default = "subnet-07ebbe60"
-        default = "subnet-bbccdcf6"
+        default = "subnet-bbccdcf6" #Todo: make sure is the subnet ID is alredy exist on region.
 }
 
 variable "ami_id" {
         description = "The AMI to use"
-        default = "ami-0a6b2839d44d781b2"
+        default = "ami-0a6b2839d44d781b2" #Ubuntu 20.04
+}
+
+variable "instance_type" {
+        default = "t2.medium"
 }
 
 variable "security_groups" {
@@ -40,9 +38,4 @@ variable "security_groups" {
 variable "number_of_instances" {
         description = "number of instances to be created"
         default = 1
-}
-
-
-variable "ami_key_pair_name" {
-        default = "AhmadKey"
 }
