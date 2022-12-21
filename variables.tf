@@ -30,12 +30,12 @@ variable "instance_type" {
         default = "t2.medium"
 }
 
-variable "security_groups" {
-        description = "The Security Groups to use"
-        default = "sg-0bc18994e9d9dcfd3"
-}
+# variable "security_groups" {
+#         description = "The Security Groups to use"
+#         default = "sg-0bc18994e9d9dcfd3"
+# }
 
-variable "number_of_instances" {
-        description = "number of instances to be created"
-        default = 1
+variable "number_of_worker" {
+        description = "number of worker instances to be join on cluster."
+        default = 2
 }
