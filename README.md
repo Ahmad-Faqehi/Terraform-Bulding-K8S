@@ -12,7 +12,7 @@ I build this project to create my own lab for Kuberntes cluster on AWS cloud. I 
 ## Terraform Resources Used
 - EC2
   - One Master Node
-  - One Worker Node (can be increased)
+  - Two Worker Node (can be increased)
 - VPC
   - Public Subnet
   - Internet Gateway
@@ -23,13 +23,14 @@ I build this project to create my own lab for Kuberntes cluster on AWS cloud. I 
 <hr>
 
 ## How Will the Kubernetes Cluster Be Built?
-The goals is to build K8S cluster with one master node and one worker node.
+The goals is to build K8S cluster with one master node and two worker nodes.
 <br>
 
-* First, the master node will boots up and will start installing <b>kubeadm</b>, <b>kubelet</b>, <b>kubectl</b>, and <b>docker</b>. Then will run `kubeadm init` to initial the k8s cluster.<br>
-Here the challenge become, how to get the join command that showed after init the cluster and send it to the workers node for joining the worker node into the cluster 🤔? <br>
-To solve this problem I use <b>s3 bucket</b>. First I extract the join command and saved into a file, then push it to s3 object. Now we finish from master node and is ready.
+* First, the master node will boots up and will start installing <b>kubeadm</b>, <b>kubelet</b>, <b>kubectl</b>, and <b>docker</b>. Then will run `kubeadm init` to initial the k8s cluster. <br>
+Here the challenge become, how to get the join command that showed after init the cluster and send it to the workers node for joining the worker node into the cluster 🤔? 
 <br>
+To solve this problem I use <b>s3 bucket</b>. First I extract the join command and saved into a file, then push it to s3 object. Now we finish from master node and is ready.
+<br><br>
 
 * Second, the workers node will boots up and will start installing <b>kubeadm</b>, <b>kubelet</b>, <b>kubectl</b>, and <b>docker</b>. Then will featch the joind command from <b>s3 bucket</b> and excuted to join the worker node into cluster.
 
