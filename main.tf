@@ -160,13 +160,10 @@ data "template_file" "envWrk" {
 
 resource "aws_instance" "ec2_instance_msr" {
     ami = var.ami_id
-    #count = var.number_of_instances
-    # subnet_id = var.subnet_id
     subnet_id = aws_subnet.some_public_subnet.id
     instance_type = var.instance_type
     key_name = var.ami_key_pair_name
     associate_public_ip_address = true
-    # security_groups = [ var.security_groups ]
     security_groups = [ aws_security_group.k8s_sg.id ]
     root_block_device {
     volume_type = "gp2"
@@ -183,12 +180,10 @@ resource "aws_instance" "ec2_instance_wrk" {
     ami = var.ami_id
     count = var.number_of_worker
     subnet_id = aws_subnet.some_public_subnet.id
-    # subnet_id = var.subnet_id
     instance_type = var.instance_type
     key_name = var.ami_key_pair_name
     associate_public_ip_address = true
     security_groups = [ aws_security_group.k8s_sg.id ]
-    # security_groups = [ var.security_groups ]
     root_block_device {
     volume_type = "gp2"
     volume_size = "8"

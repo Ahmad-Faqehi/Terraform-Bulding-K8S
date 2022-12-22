@@ -1,7 +1,13 @@
 # Terraform to Bulding Kubernetes Cluster
+[![LinkedIn][linkedin-shield]][linkedin-url]
+[![Twitter][twitter-shield]][twittwe-url]
+[![Twitter][github-shield]][github-url]
+
 I build this project to create my own lab for Kuberntes cluster on AWS cloud. I found [Terraform](https://www.terraform.io) is best tool to create my K8S lab fastly with only one command 🚀.
+<p align="center">
 
 ![Terraform](https://i.imgur.com/PuS3rmb.png)
+</p>
 
 ## Terraform Resources Used
 - EC2
@@ -29,9 +35,57 @@ To solve this problem I use <b>s3 bucket</b>. First I extract the join command a
 
 <hr>
 
+## Incress Number of Worker Nodes
+* By default there are two workers on the cluster, to incress it go to `variables.tf` file and looking for <b>number_of_worker</b> variable, you can incress the default number.
+
+<hr>
+
+## Requirements Before Running
+1- Make sure you have the terrafrom tools installed on your machine.
+
+2- Add your Access key, Secret key and Key Pair name on `variables.tf` file.
+
+3- Make sure your IAM user has right permission to creating EC2, VPC, S3, Route Table, Security Group and Internet Gateway.
+
+## Running the Script
+After doing the requirements, you are ready to run terraform script by following command:
+``` shell
+terraform init
+terraform plan #to show what going to build
+terraform apply
+```
+
 ## Accessing Your Cluster
-* You can access your cluster by accessing the master node throw <b>ssh</b>, you cat get the public IP from terrform outputs. below is example of ssh command:
+* You can access your cluster by accessing the master node throw <b>ssh</b>, you can get the public IP from terrform outputs. below is example of ssh command:
 ``` shell
 ssh -i <Your_Key_Piar> ubuntu@<MasterNode_Public_IP>
 ```
-Then switch to root user to use `kubectl` command 
+Then switch to root user to use `kubectl` command.
+
+* Another way to access the cluster by download the `admin.conf` file from master node to your machine, find below the way to download it and aceess the cluster remotely.
+``` shell
+scp -i <Your_Key_Piar> ubuntu@<MasterNode_Public_IP>:/tmp/admin.conf .
+```
+This will download the kubernetes config file on your machine, you can fastly used by following commadn
+```shell
+kubectl --kubeconfig ./admin.conf get nodes
+```
+
+
+
+<!-- CONTACT -->
+## Contact Me
+
+Ahmad Faqehi - [iAhmad.info](https://iAhmad.info) - alfaqehi775@hotmail.com
+
+Project Link: [https://github.com/Ahmad-Faqehi/Terraform-Bulding-K8S](https://github.com/Ahmad-Faqehi/Terraform-Bulding-K8S)
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/ahmad-faqehi
+[twitter-shield]: https://img.shields.io/badge/-twitter-black.svg?style=for-the-badge&logo=twitter&colorB=555
+[twittwe-url]: https://twitter.com/A_F775
+[github-shield]: https://img.shields.io/badge/-github-black.svg?style=for-the-badge&logo=github&colorB=555
+[github-url]: https://github.com/Ahmad-Faqehi

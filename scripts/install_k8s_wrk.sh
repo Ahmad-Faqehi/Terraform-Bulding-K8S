@@ -2,8 +2,8 @@
 
 ######### ** FOR WORKER NODE ** #########
 
-hostname k8s-wrk-01
-echo "k8s-wrk-01" > /etc/hostname
+# hostname k8s-wrk-01
+# echo "k8s-wrk-01" > /etc/hostname
 
 export AWS_ACCESS_KEY_ID=${access_key}
 export AWS_SECRET_ACCESS_KEY=${private_key}

@@ -1,4 +1,4 @@
-variable "access_key" { #Todo: uncomment the default value and add your acess key.
+variable "access_key" { #Todo: uncomment the default value and add your access key.
         description = "Access key to AWS console"
         #default = "XXXXXXXXXXXXXX" 
 }
@@ -13,12 +13,7 @@ variable "ami_key_pair_name" { #Todo: uncomment the default value and add your p
 }
 variable "region" {
         description = "The region zone on AWS"
-        default = "us-east-1" #The zone I selected is us-east-1, feel free to cahnge it.
-}
-
-variable "subnet_id" {
-        description = "The VPC subnet the instance(s) will be created in"
-        default = "subnet-bbccdcf6" #Todo: make sure is the subnet ID is alredy exist on region.
+        default = "us-east-1" #The zone I selected is us-east-1, if you change it make sure to check if ami_id below is correct.
 }
 
 variable "ami_id" {
@@ -28,14 +23,4 @@ variable "ami_id" {
 
 variable "instance_type" {
         default = "t2.medium"
-}
-
-# variable "security_groups" {
-#         description = "The Security Groups to use"
-#         default = "sg-0bc18994e9d9dcfd3"
-# }
-
-variable "number_of_worker" {
-        description = "number of worker instances to be join on cluster."
-        default = 2
 }
