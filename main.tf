@@ -171,7 +171,7 @@ resource "aws_instance" "ec2_instance_msr" {
     delete_on_termination = true
     }
     tags = {
-        Name = "k8s_msr"
+        Name = "k8s_msr_1"
     }
     user_data_base64       = base64encode(data.template_file.envMsr.rendered)
 } 
