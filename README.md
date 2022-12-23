@@ -25,9 +25,9 @@ I build this project to create my own lab for [Kuberntes](https://kubernetes.io/
 ## How Will the Kubernetes Cluster Be Built?
 The goals is to build K8S cluster with one master node and two worker nodes.
 <br>
-<div style="padding-bottom: 10px;">
+
 * First, the master node will boots up and will start installing <b>kubeadm</b>, <b>kubelet</b>, <b>kubectl</b>, and <b>docker</b>. Then will run `kubeadm init` to initial the k8s cluster. <br>
-Here the challenge become, how to get the join command that showed after init the cluster and send it to the workers node for joining the worker node into the cluster 🤔? <br></div>
+Here the challenge become, how to get the join command that showed after init the cluster and send it to the workers node for joining the worker node into the cluster 🤔? <br>
 To solve this problem I use <b>s3 bucket</b>. First I extract the join command and saved into a file, then push it to s3 object. Now we finish from master node and is ready.
 <br>
 
