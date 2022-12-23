@@ -143,21 +143,6 @@ data "template_file" "envMsr" {
   ]
 }
 
-data "template_file" "envWrk" {
-  template = file("scripts/install_k8s_wrk.sh")
-  vars = {
-    access_key = var.access_key,
-    private_key = var.secret_key,
-    region = var.region,
-    s3buckit_name = "k8s-${random_string.s3name.result}"
-  }
-
-  depends_on = [
-    aws_s3_bucket.s3buckit,
-    random_string.s3name
-  ]
-}
-
 resource "aws_instance" "ec2_instance_msr" {
     ami = var.ami_id
     subnet_id = aws_subnet.some_public_subnet.id
@@ -192,8 +177,20 @@ resource "aws_instance" "ec2_instance_wrk" {
     tags = {
         Name = "k8r_wrk_${count.index + 1}"
     }
-    user_data_base64       = base64encode(data.template_file.envWrk.rendered)
+    # user_data_base64       = base64encode(data.template_file.envWrk.rendered)
+    user_data_base64 = base64encode("${templatefile("scripts/install_k8s_wrk.sh", {
+
+    access_key = "${var.access_key}"
+    private_key = "${var.secret_key}"
+    region = "${var.region}"
+    s3buckit_name = "k8s-${random_string.s3name.result}"
+    worker_number = "${count.index + 1}"
+
+    })}")
+  
     depends_on = [
-    aws_instance.ec2_instance_msr
+      aws_s3_bucket.s3buckit,
+      random_string.s3name,
+      aws_instance.ec2_instance_msr
   ]
 } 
