@@ -48,9 +48,13 @@ To solve this problem I use <b>s3 bucket</b>. First I extract the join command a
 3- Make sure your IAM user has right permission to creating EC2, VPC, S3, Route Table, Security Group and Internet Gateway.
 
 ## Running the Script
-After doing the requirements, you are ready to run terraform script by following command:
+After doing the requirements, you are ready now, start clone the repo to your machine:
 ``` shell
 git clone https://github.com/Ahmad-Faqehi/Terraform-Bulding-K8S.git
+cd Terraform-Bulding-K8S/
+```
+Now execute terraform commands:
+``` shell
 terraform init
 terraform plan #to show what going to build
 terraform apply
