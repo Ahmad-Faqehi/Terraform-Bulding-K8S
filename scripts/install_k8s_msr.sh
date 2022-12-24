@@ -58,6 +58,7 @@ cp -i /etc/kubernetes/admin.conf /tmp/admin.conf;
 chmod 755 /tmp/admin.conf
 
 #Add kube config to ubuntu user.
+mkdir -p /home/ubuntu/.kube;
 cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config;
 chmod 755 /home/ubuntu/.kube/config
 
