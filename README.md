@@ -50,6 +50,7 @@ To solve this problem I use <b>s3 bucket</b>. First I extract the join command a
 ## Running the Script
 After doing the requirements, you are ready to run terraform script by following command:
 ``` shell
+git clone https://github.com/Ahmad-Faqehi/Terraform-Bulding-K8S.git
 terraform init
 terraform plan #to show what going to build
 terraform apply
@@ -60,7 +61,6 @@ terraform apply
 ``` shell
 ssh -i <Your_Key_Piar> ubuntu@<MasterNode_Public_IP>
 ```
-Then switch to root user to use `kubectl` command.
 
 * Another way to access the cluster by download the `admin.conf` file from master node to your machine, find below the way to download it and aceess the cluster remotely.
 ``` shell

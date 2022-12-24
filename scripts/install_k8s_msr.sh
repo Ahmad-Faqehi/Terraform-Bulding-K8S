@@ -55,7 +55,13 @@ aws s3 cp /tmp/join_command.sh s3://${s3buckit_name};
 mkdir -p /root/.kube;
 cp -i /etc/kubernetes/admin.conf /root/.kube/config;
 cp -i /etc/kubernetes/admin.conf /tmp/admin.conf;
-chmod 777 /tmp/admin.conf
+chmod 755 /tmp/admin.conf
+
+#Add kube config to ubuntu user.
+cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config;
+chmod 755 /home/ubuntu/.kube/config
+
+
 #to copy kube config file to s3
 # aws s3 cp /etc/kubernetes/admin.conf s3://${s3buckit_name}
 
