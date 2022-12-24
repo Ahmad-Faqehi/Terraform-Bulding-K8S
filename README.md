@@ -3,7 +3,7 @@
 [![Twitter][twitter-shield]][twittwe-url]
 [![Twitter][github-shield]][github-url]
 
-I build this project to create my own lab for Kuberntes cluster on AWS cloud. I found [Terraform](https://www.terraform.io) is best tool to create my K8S lab fastly with only one command 🚀.
+I build this project to create my own lab for [Kuberntes](https://kubernetes.io/) cluster on AWS cloud. I found [Terraform](https://www.terraform.io) is best tool to create my K8S lab fastly with one command 🚀.
 <p align="center">
 
 ![Terraform](https://i.imgur.com/PuS3rmb.png)
@@ -12,7 +12,7 @@ I build this project to create my own lab for Kuberntes cluster on AWS cloud. I 
 ## Terraform Resources Used
 - EC2
   - One Master Node
-  - One Worker Node (can be increased)
+  - Two Worker Node (can be increased)
 - VPC
   - Public Subnet
   - Internet Gateway
@@ -23,10 +23,10 @@ I build this project to create my own lab for Kuberntes cluster on AWS cloud. I 
 <hr>
 
 ## How Will the Kubernetes Cluster Be Built?
-The goals is to build K8S cluster with one master node and one worker node.
+The goals is to build K8S cluster with one master node and two worker nodes.
 <br>
 
-* First, the master node will boots up and will start installing <b>kubeadm</b>, <b>kubelet</b>, <b>kubectl</b>, and <b>docker</b>. Then will run `kubeadm init` to initial the k8s cluster.<br>
+* First, the master node will boots up and will start installing <b>kubeadm</b>, <b>kubelet</b>, <b>kubectl</b>, and <b>docker</b>. Then will run `kubeadm init` to initial the k8s cluster. <br>
 Here the challenge become, how to get the join command that showed after init the cluster and send it to the workers node for joining the worker node into the cluster 🤔? <br>
 To solve this problem I use <b>s3 bucket</b>. First I extract the join command and saved into a file, then push it to s3 object. Now we finish from master node and is ready.
 <br>
@@ -56,7 +56,7 @@ terraform apply
 ```
 
 ## Accessing Your Cluster
-* You can access your cluster by accessing the master node throw <b>ssh</b>, you can get the public IP from terrform outputs. below is example of ssh command:
+* You can access your cluster by accessing the master node throw <b>ssh</b>, you can get the public IP of master node from terrform outputs. Below is example of ssh command:
 ``` shell
 ssh -i <Your_Key_Piar> ubuntu@<MasterNode_Public_IP>
 ```
@@ -66,7 +66,7 @@ Then switch to root user to use `kubectl` command.
 ``` shell
 scp -i <Your_Key_Piar> ubuntu@<MasterNode_Public_IP>:/tmp/admin.conf .
 ```
-This will download the kubernetes config file on your machine, you can fastly used by following commadn
+This will download the kubernetes config file on your machine. Before using this config file, you have to replace the private ip to public ip of master node. Then you can fastly used by following commann to start accessing the cluster.
 ```shell
 kubectl --kubeconfig ./admin.conf get nodes
 ```
