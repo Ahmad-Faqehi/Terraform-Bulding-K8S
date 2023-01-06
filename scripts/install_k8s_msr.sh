@@ -71,3 +71,14 @@ curl -o /root/calico.yaml https://docs.projectcalico.org/v3.16/manifests/calico.
 sleep 5
 kubectl --kubeconfig /root/.kube/config apply -f /root/calico.yaml
 systemctl restart kubelet
+
+# Apply kubectl Cheat Sheet Autocomplete
+source <(kubectl completion bash) # set up autocomplete in bash into the current shell, bash-completion package should be installed first.
+echo "source <(kubectl completion bash)" >> /home/ubuntu/.bashrc # add autocomplete permanently to your bash shell.
+echo "source <(kubectl completion bash)" >> /root/.bashrc # add autocomplete permanently to your bash shell.
+alias k=kubectl
+complete -o default -F __start_kubectl k
+echo "alias k=kubectl" >> /home/ubuntu/.bashrc
+echo "alias k=kubectl" >> /root/.bashrc
+echo "complete -o default -F __start_kubectl k" >> /home/ubuntu/.bashrc
+echo "complete -o default -F __start_kubectl k" >> /root/.bashrc

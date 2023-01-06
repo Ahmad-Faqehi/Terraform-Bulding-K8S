@@ -75,6 +75,11 @@ This will download the kubernetes config file on your machine. Before using this
 kubectl --kubeconfig ./admin.conf get nodes
 ```
 
+## Removing and Destroying Kuberntes Cluster
+To destroy the hole resources that created after applying the script, just run the following command:
+```shell
+terraform destroy
+```
 
 
 <!-- CONTACT -->

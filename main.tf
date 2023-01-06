@@ -13,10 +13,15 @@ resource "aws_vpc" "some_custom_vpc" {
   }
 }
 
+resource "random_shuffle" "az" {
+  input        = ["${var.region}a", "${var.region}b", "${var.region}c", "${var.region}d", "${var.region}e"]
+  result_count = 1
+}
+
 resource "aws_subnet" "some_public_subnet" {
   vpc_id            = aws_vpc.some_custom_vpc.id
   cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-1a"
+  availability_zone = random_shuffle.az.result[0]
 
   tags = {
     Name = "K8S Subnet"
@@ -128,20 +133,6 @@ resource "aws_s3_bucket_acl" "example_bucket_acl" {
   acl    = "private"
 }
 
-data "template_file" "envMsr" {
-  template = file("scripts/install_k8s_msr.sh")
-  vars = {
-    access_key = var.access_key,
-    private_key = var.secret_key,
-    region = var.region,
-    s3buckit_name = "k8s-${random_string.s3name.result}"
-  }
-
-  depends_on = [
-    aws_s3_bucket.s3buckit,
-    random_string.s3name
-  ]
-}
 
 resource "aws_instance" "ec2_instance_msr" {
     ami = var.ami_id
@@ -158,7 +149,20 @@ resource "aws_instance" "ec2_instance_msr" {
     tags = {
         Name = "k8s_msr_1"
     }
-    user_data_base64       = base64encode(data.template_file.envMsr.rendered)
+    user_data_base64 = base64encode("${templatefile("scripts/install_k8s_msr.sh", {
+
+    access_key = var.access_key
+    private_key = var.secret_key
+    region = var.region
+    s3buckit_name = "k8s-${random_string.s3name.result}"
+    })}")
+
+    depends_on = [
+    aws_s3_bucket.s3buckit,
+    random_string.s3name
+  ]
+
+    
 } 
 
 resource "aws_instance" "ec2_instance_wrk" {
@@ -177,12 +181,11 @@ resource "aws_instance" "ec2_instance_wrk" {
     tags = {
         Name = "k8r_wrk_${count.index + 1}"
     }
-    # user_data_base64       = base64encode(data.template_file.envWrk.rendered)
     user_data_base64 = base64encode("${templatefile("scripts/install_k8s_wrk.sh", {
 
-    access_key = "${var.access_key}"
-    private_key = "${var.secret_key}"
-    region = "${var.region}"
+    access_key = var.access_key
+    private_key = var.secret_key
+    region = var.region
     s3buckit_name = "k8s-${random_string.s3name.result}"
     worker_number = "${count.index + 1}"
 
