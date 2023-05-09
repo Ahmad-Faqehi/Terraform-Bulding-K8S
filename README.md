@@ -1,9 +1,9 @@
-# Terraform to Bulding Kubernetes Cluster
+# Terraform to Bulding Kubernetes Cluster using EC2 instances
 [![LinkedIn][linkedin-shield]][linkedin-url]
 [![Twitter][twitter-shield]][twittwe-url]
 [![Twitter][github-shield]][github-url]
 
-I build this project to create my own lab for [Kuberntes](https://kubernetes.io/) cluster on AWS cloud. I found [Terraform](https://www.terraform.io) is best tool to create my K8S lab fastly with one command 🚀.
+I build this project to create my own lab for [Kuberntes](https://kubernetes.io/) cluster on AWS cloud using EC2 instances. I found [Terraform](https://www.terraform.io) is best tool to create my K8S lab fastly with one command 🚀.
 <p align="center">
 
 ![Terraform](https://i.imgur.com/PuS3rmb.png)
