@@ -50,20 +50,3 @@ sleep 1m
 aws s3 cp s3://${s3buckit_name}/join_command.sh /tmp/.
 chmod +x /tmp/join_command.sh
 bash /tmp/join_command.sh
-
-#this adds .kube/config for root account, run same for ubuntu user, if you need it
-# mkdir -p /root/.kube
-# cp -i /etc/kubernetes/admin.conf /root/.kube/config
-
-#Line bellow only if you need to run for user ubuntu
-
-#Installing network CNI, here are examples of Calico and Flannel, but you can replace with others
-#You need to uncomment one of 2 next lines — flannel and calico used here as an example. Example below is using calico
-
-#Uncomment next line if you want flannel Cluster Pod Network
-#curl -o /root/kube-flannel.yml https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-#kubectl — kubeconfig /root/.kube/config apply -f /root/kube-flannel.yml
-
-#Uncomment next line if you want calico Cluster Pod Network
-#curl -o /root/calico.yaml https://docs.projectcalico.org/v3.16/manifests/calico.yaml
-#kubectl --kubeconfig /root/.kube/config apply -f /root/calico.yaml
