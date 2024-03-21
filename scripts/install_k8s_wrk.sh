@@ -25,15 +25,22 @@ apt install awscli -y
 #Adding Kubernetes repositories
 
 #Next 2 lines are different from official Kubernetes guide, but the way Kubernetes describe step does not work
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add
-echo "deb https://packages.cloud.google.com/apt kubernetes-xenial main" > /etc/apt/sources.list.d/kurbenetes.list
+# curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add
+# echo "deb https://packages.cloud.google.com/apt kubernetes-xenial main" > /etc/apt/sources.list.d/kurbenetes.list
+
+mkdir -p /etc/apt/keyrings/
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
 
 #Turn off swap
 swapoff -a
 
 #Installing Kubernetes tools
 apt update
-apt install kubelet kubeadm kubectl -y
+# apt install kubelet kubeadm kubectl -y
+apt install -y kubeadm=1.28.1-1.1 kubelet=1.28.1-1.1 kubectl=1.28.1-1.1
+
 
 #next line is getting EC2 instance IP, for kubeadm to initiate cluster
 #we need to get EC2 internal IP address- default ENI is eth0
