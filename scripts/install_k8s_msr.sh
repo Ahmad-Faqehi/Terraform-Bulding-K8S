@@ -16,6 +16,14 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 
 #Installing Docker
+tee /etc/modules-load.d/containerd.conf <<EOF
+overlay
+br_netfilter
+EOF
+
+modprobe overlay
+modprobe br_netfilter
+
 apt update
 apt-cache policy docker-ce
 apt install docker-ce -y
@@ -33,6 +41,9 @@ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 
 #Turn off swap
 swapoff -a
+sudo sed -i '/swap/d' /etc/fstab
+mount -a
+ufw disable
 
 #Installing Kubernetes tools
 apt update
@@ -46,11 +57,21 @@ export pubip=`dig +short myip.opendns.com @resolver1.opendns.com`
 
 # the kubeadm init won't work entel remove the containerd config and restart it.
 rm /etc/containerd/config.toml
+
 systemctl restart containerd
+
+tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+sysctl --system
 
 #Kubernetes cluster init
 #You can replace 172.16.0.0/16 with your desired pod network
 kubeadm init --apiserver-advertise-address=$ipaddr --pod-network-cidr=192.168.0.0/16 --apiserver-cert-extra-sans=$pubip > /tmp/restult.out
+# kubeadm init --apiserver-advertise-address=$ipaddr --apiserver-cert-extra-sans=$pubip > /tmp/restult.out
 cat /tmp/restult.out
 
 #to get join commdn
@@ -71,11 +92,25 @@ chmod 755 /home/ubuntu/.kube/config
 #to copy kube config file to s3
 # aws s3 cp /etc/kubernetes/admin.conf s3://${s3buckit_name}
 
+export KUBECONFIG=/root/.kube/config
+# install helm
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+bash get_helm.sh
+
+# Setup flannel
+kubectl create --kubeconfig /root/.kube/config ns kube-flannel
+kubectl label --overwrite ns kube-flannel pod-security.kubernetes.io/enforce=privileged
+helm repo add flannel https://flannel-io.github.io/flannel/
+helm install flannel --set podCidr="192.168.0.0/16" --namespace kube-flannel flannel/flannel
+
+
+
 #Uncomment next line if you want calico Cluster Pod Network
-curl -o /root/calico.yaml https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/tigera-operator.yaml
+# curl -o /root/calico.yaml https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/tigera-operator.yaml
 sleep 5
-kubectl --kubeconfig /root/.kube/config apply -f /root/calico.yaml
-systemctl restart kubelet
+# kubectl --kubeconfig /root/.kube/config apply -f /root/calico.yaml
+# systemctl restart kubelet
 
 # Apply kubectl Cheat Sheet Autocomplete
 source <(kubectl completion bash) # set up autocomplete in bash into the current shell, bash-completion package should be installed first.

@@ -16,6 +16,15 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 
 #Installing Docker
+tee /etc/modules-load.d/containerd.conf <<EOF
+overlay
+br_netfilter
+EOF
+
+modprobe overlay
+modprobe br_netfilter
+
+
 apt update
 apt-cache policy docker-ce
 apt install docker-ce -y
@@ -35,6 +44,9 @@ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 
 #Turn off swap
 swapoff -a
+sudo sed -i '/swap/d' /etc/fstab
+mount -a
+ufw disable
 
 #Installing Kubernetes tools
 apt update
@@ -50,6 +62,14 @@ export ipaddr=`ip address|grep eth0|grep inet|awk -F ' ' '{print $2}' |awk -F '/
 # the kubeadm init won't work entel remove the containerd config and restart it.
 rm /etc/containerd/config.toml
 systemctl restart containerd
+
+tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+sysctl --system
 
 # to insure the join command start when the installion of master node is done.
 sleep 1m
